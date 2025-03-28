@@ -1,0 +1,73 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Create vite.config.js with base path
+        run: |
+          echo "import { defineConfig } from 'vite';
+          import react from '@vitejs/plugin-react';
+          import path from 'path';
+          import { fileURLToPath } from 'url';
+          
+          const __dirname = path.dirname(fileURLToPath(import.meta.url));
+          
+          export default defineConfig({
+            plugins: [react()],
+            resolve: {
+              alias: {
+                '@': path.resolve(__dirname, 'client/src'),
+                '@shared': path.resolve(__dirname, 'shared'),
+              },
+            },
+            root: path.resolve(__dirname, 'client'),
+            base: '/MARC-Marketing-Game/',
+            build: {
+              outDir: path.resolve(__dirname, 'dist'),
+              emptyOutDir: true,
+            },
+          });" > vite.config.js
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './dist'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
