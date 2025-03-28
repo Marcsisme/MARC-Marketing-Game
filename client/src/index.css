@@ -1,0 +1,401 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'PixelFont';
+  src: url('https://fonts.gstatic.com/s/pressstart2p/v9/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@layer base {
+  :root {
+    --primary: #ff6b6b;
+    --primary-foreground: #ffffff;
+    --bg-color: #222034;
+    --text-color: #f4f4f4;
+    --secondary: #43a047;
+    --accent: #ffcc00;
+    --border-color: #5b6ee1;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'PixelFont', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: none;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none;
+}
+
+.pixelart {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Retro UI Components */
+.retro-window {
+  border: 4px solid var(--border-color);
+  box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.retro-window-header {
+  background-color: var(--primary);
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.retro-button {
+  background-color: var(--bg-color);
+  border: 2px solid var(--border-color);
+  color: var(--text-color);
+  padding: 0.5rem 1rem;
+  text-transform: uppercase;
+  transition: all 0.1s ease;
+}
+
+.retro-button:hover {
+  background-color: var(--primary);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.retro-button:active {
+  transform: translate(0px, 0px);
+  box-shadow: none;
+}
+
+/* Retro CRT effect */
+.crt-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.15;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  /* Removed flickering animation for accessibility */
+}
+
+.crt-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(33, 33, 33, 0.3) 90%,
+    rgba(33, 33, 33, 0.5) 100%
+  );
+}
+
+/* Pixel-style dialogue box */
+.pixel-dialogue {
+  border: 4px solid var(--border-color);
+  border-radius: 0;
+  padding: 16px;
+  background-color: var(--bg-color);
+  position: relative;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  
+  /* Pixelated corners */
+  clip-path: polygon(
+    0% 10px, 10px 0%, calc(100% - 10px) 0%, 100% 10px,
+    100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 10px)
+  );
+}
+
+.pixel-dialogue::after {
+  content: '▼';
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  animation: bounce 0.6s infinite alternate;
+  color: var(--accent);
+}
+
+.pixel-dialogue-header {
+  padding: 6px 12px;
+  background-color: var(--primary);
+  margin: -16px -16px 12px -16px;
+  font-weight: bold;
+  color: white;
+  font-family: 'PixelFont', sans-serif;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.dialogue-character {
+  color: var(--accent);
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-6px);
+  }
+}
+
+/* Terminal styling */
+.terminal-window {
+  font-family: 'PixelFont', monospace;
+  position: relative;
+}
+
+.terminal-content {
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) #222240;
+}
+
+.terminal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.terminal-content::-webkit-scrollbar-track {
+  background: #222240;
+}
+
+.terminal-content::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border: 2px solid #222240;
+}
+
+.terminal-text {
+  font-family: 'PixelFont', monospace;
+  line-height: 1.6;
+  position: relative;
+}
+
+.terminal-text::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0.1) 50%, rgba(0, 0, 0, 0.2) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.15;
+}
+
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0) 100%);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 999;
+  animation: scanline 8s linear infinite;
+  background-size: 100% 25px;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* Additional retro animations and effects */
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+.blink-slow {
+  animation: blink 1.5s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.selected-item {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 204, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 204, 0, 0);
+  }
+}
+
+/* Marc and user messages */
+.marc-message {
+  position: relative;
+}
+
+.marc-message::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid var(--primary);
+}
+
+.user-message {
+  position: relative;
+}
+
+.user-message::after {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid var(--border-color);
+}
+
+/* Game menu styling */
+.game-menu {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.5rem;
+  background-color: rgba(20, 19, 39, 0.85);
+  border: 2px solid var(--border-color);
+  font-family: 'PixelFont', sans-serif;
+  z-index: 100;
+}
+
+.game-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.game-menu-item:hover {
+  border-color: var(--primary);
+  transform: translateX(2px);
+  color: var(--primary);
+}
+
+.game-menu-item-icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+  color: var(--accent);
+}
+
+/* Stats display */
+.stat-bar {
+  height: 1rem;
+  background-color: #333;
+  position: relative;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-fill {
+  height: 100%;
+  transition: width 0.3s ease-out;
+}
+
+.creativity-fill {
+  background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+}
+
+.persuasion-fill {
+  background: linear-gradient(90deg, #43a047, #66bb6a);
+}
+
+.publicSpeaking-fill {
+  background: linear-gradient(90deg, #5b6ee1, #7c8be8);
+}
+
+.research-fill {
+  background: linear-gradient(90deg, #ffcc00, #ffdd55);
+}
+
+.stat-label {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 0.75rem;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.stat-value {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 0.75rem;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
